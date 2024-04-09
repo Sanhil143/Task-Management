@@ -70,11 +70,15 @@ export class TeamMemberShipService {
       throw new Error('User is already in this team');
     }
 
-    existingMembership.userId = user.id;
-    return await this.teamMemberShipRepository.save(existingMembership);
+    const newTeamMembership = new TeamMemberShipEntity();
+    newTeamMembership.teamId = team.teamId;
+    newTeamMembership.userId = user.id;
+
+    return await this.teamMemberShipRepository.save(newTeamMembership);
+    
   }
 
-  async getTeamMembersByTeamId(teamId: number): Promise<number[]> {
+  async getTeamMembersByTeamId(teamId: number): Promise<{ userId:number,firstName: string,lastName: string, email: string }[]> {
     // Check if any team members exist for the given teamId
     const teamMemberships = await this.teamMemberShipRepository.find({ where: { teamId} });
 
@@ -85,6 +89,14 @@ export class TeamMemberShipService {
     // Extract userIds from team memberships
     const userIds = teamMemberships.map((membership) => membership.userId);
 
-    return userIds;
+    const users: { userId:number,firstName: string,lastName: string, email: string }[] = [];
+    for (const userId of userIds) {
+        const user = await this.userRepository.findOne({where:{id:userId}});
+        if (user) {
+            users.push({userId:user.id, firstName: user.firstName,lastName: user.lastName, email: user.email });
+        }
+    }
+    
+    return users;
   }
 }

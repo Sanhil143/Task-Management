@@ -10,6 +10,9 @@ export class UserEntity{
 
   @Column({ nullable: false })
   lastName:string;
+
+  @Column({ default: 'user' })
+  role:string;
   
   @Column({ nullable: false, unique: true  })
   email:string;

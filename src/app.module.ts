@@ -37,10 +37,3 @@ import { TeamMemberShipEntity } from './team-member/schema/team-member.entity';
 })
 export class AppModule {}
 
-
-// type:process.env.DB_Type,
-//       host:process.env.Host,
-//       port:process.env.DB_Port,
-//       username:process.env.Username,
-//       password:process.env.Password,
-//       database:process.env.DB_Name,
