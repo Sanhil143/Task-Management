@@ -11,11 +11,9 @@ export class TeamService {
     private readonly teamRepository: Repository<TeamEntity>,
   ) {}
 
-  async create(
-    createTeamDto: CreateTeamDto,
-  ) : Promise<TeamEntity> {
+  async create(createTeamDto: CreateTeamDto): Promise<TeamEntity> {
     const userData = await this.teamRepository.save(createTeamDto);
-    return this.teamRepository.save(userData);  
+    return this.teamRepository.save(userData);
   }
 
   async getAllTasks(): Promise<TeamEntity[]> {

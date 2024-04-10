@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { TaskEntity } from "./schema/task.entity";
-import { Repository } from "typeorm";
-import { CreateTaskDto } from "./dto/task.dto";
-import { UserEntity } from "../user/schema/user.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TaskEntity } from './schema/task.entity';
+import { Repository } from 'typeorm';
+import { CreateTaskDto } from './dto/task.dto';
+import { UserEntity } from '../user/schema/user.entity';
 
 @Injectable()
 export class TaskService {
@@ -12,7 +12,7 @@ export class TaskService {
     private readonly taskRepository: Repository<TaskEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ){}
+  ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<TaskEntity> {
     const { description, due_date, asignee } = createTaskDto;
@@ -25,7 +25,7 @@ export class TaskService {
     newTask.description = description;
     newTask.due_date = due_date;
     newTask.asignee = user;
-    newTask.status = "pending";
+    newTask.status = 'pending';
 
     return this.taskRepository.save(newTask);
   }
@@ -35,15 +35,34 @@ export class TaskService {
   }
 
   async getTasksByAssignee(asigneeId: number): Promise<TaskEntity[]> {
-    return await this.taskRepository.find({ where: { asignee: { id: asigneeId } } });
+    return await this.taskRepository.find({
+      where: { asignee: { id: asigneeId } },
+    });
   }
 
   async updateTaskStatus(taskId: number): Promise<TaskEntity> {
-    const task = await this.taskRepository.findOne({ where: { taskId: taskId }});
+    const task = await this.taskRepository.findOne({
+      where: { taskId: taskId },
+    });
     if (!task) {
       throw new Error('Task not found');
     }
-    task.status = "completed";
+    task.status = 'completed';
+    return await this.taskRepository.save(task);
+  }
+
+  async updateTaskDate(
+    taskId: number,
+    createTaskDto: CreateTaskDto,
+  ): Promise<TaskEntity> {
+    const { due_date } = createTaskDto;
+    const task = await this.taskRepository.findOne({
+      where: { taskId: taskId },
+    });
+    if (!task) {
+      throw new Error('Task not found');
+    }
+    task.due_date = due_date;
     return await this.taskRepository.save(task);
   }
 }

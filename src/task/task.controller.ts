@@ -1,16 +1,22 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/task.dto';
 import { TaskEntity } from './schema/task.entity';
 
 @Controller('task')
 export class TaskController {
-  constructor(
-    private readonly taskService:TaskService
-  ) {}
+  constructor(private readonly taskService: TaskService) {}
 
   @Post('create')
-  async create(@Body() createTaskDto : CreateTaskDto){
+  async create(@Body() createTaskDto: CreateTaskDto) {
     try {
       await this.taskService.create(createTaskDto);
       return {
@@ -18,10 +24,10 @@ export class TaskController {
         message: 'Task Created Successfully',
       };
     } catch (error) {
-      return{
-        success:false,
-        message:error.message
-      }
+      return {
+        success: false,
+        message: error.message,
+      };
     }
   }
 
@@ -31,12 +37,22 @@ export class TaskController {
   }
 
   @Get('/assignee/:assigneeId')
-  async getTasksByAssignee(@Param('assigneeId') assigneeId: number): Promise<TaskEntity[]> {
+  async getTasksByAssignee(
+    @Param('assigneeId') assigneeId: number,
+  ): Promise<TaskEntity[]> {
     return this.taskService.getTasksByAssignee(assigneeId);
   }
 
   @Patch(':id/updateStatus')
   async updateTaskStatus(@Param('id') taskId: number): Promise<TaskEntity> {
     return this.taskService.updateTaskStatus(taskId);
+  }
+
+  @Patch(':id/updateDate')
+  async updateTaskDate(
+    @Param('id') taskId: number,
+    @Body() createTaskDto: CreateTaskDto,
+  ): Promise<TaskEntity> {
+    return this.taskService.updateTaskDate(taskId, createTaskDto);
   }
 }

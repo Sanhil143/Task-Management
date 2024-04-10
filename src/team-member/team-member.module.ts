@@ -7,8 +7,8 @@ import { UserEntity } from 'src/user/schema/user.entity';
 import { TeamEntity } from 'src/team/schema/team.entity';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([TeamMemberShipEntity,UserEntity,TeamEntity])
+  imports: [
+    TypeOrmModule.forFeature([TeamMemberShipEntity, UserEntity, TeamEntity]),
   ],
   controllers: [TeamMemberShipController],
   providers: [TeamMemberShipService],

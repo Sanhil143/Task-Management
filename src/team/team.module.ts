@@ -5,9 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TeamEntity } from './schema/team.entity';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([TeamEntity])
-  ],
+  imports: [TypeOrmModule.forFeature([TeamEntity])],
   controllers: [TeamController],
   providers: [TeamService],
 })

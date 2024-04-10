@@ -6,10 +6,8 @@ import { TaskEntity } from './schema/task.entity';
 import { UserEntity } from 'src/user/schema/user.entity';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([TaskEntity,UserEntity])
-  ],
+  imports: [TypeOrmModule.forFeature([TaskEntity, UserEntity])],
   controllers: [TaskController],
-  providers: [TaskService]
+  providers: [TaskService],
 })
 export class TaskModule {}

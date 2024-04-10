@@ -1,6 +1,6 @@
-import { TeamEntity } from "src/team/schema/team.entity";
-import { UserEntity } from "src/user/schema/user.entity";
-import { Column,Entity,ManyToOne,PrimaryGeneratedColumn } from "typeorm";
+import { TeamEntity } from 'src/team/schema/team.entity';
+import { UserEntity } from 'src/user/schema/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class TeamMemberShipEntity {
@@ -13,9 +13,9 @@ export class TeamMemberShipEntity {
   @Column()
   teamId: number;
 
-  @ManyToOne(() => TeamEntity , team => team.teamId )
-  team: TeamEntity
-  
-  @ManyToOne(() => UserEntity , user => user.id )
-  user: UserEntity
+  @ManyToOne(() => TeamEntity, (team) => team.teamId)
+  team: TeamEntity;
+
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  user: UserEntity;
 }

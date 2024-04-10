@@ -1,22 +1,35 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt'
-import { CreateUserDto} from './dto/user.dto';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
+import { UserGuard } from 'src/auth/guards/user.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('user')
 export class UserController {
   constructor(
-    private readonly userService:UserService
+    private readonly userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
   @Post('signin')
-  async create(@Body() createUserDto : CreateUserDto){
+  async create(@Body() createUserDto: CreateUserDto) {
     try {
-      let {role,password} = createUserDto
-      if(role){
-        role = 'admin';
+      let { role, password } = createUserDto;
+      if (!role) {
+        role = 'user';
       }
-      role = 'user'
       const saltOrRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltOrRounds);
       createUserDto.role;
@@ -27,34 +40,40 @@ export class UserController {
         message: 'User Created Successfully',
       };
     } catch (error) {
-      return{
-        success:false,
-        message:error.message
-      }
+      return {
+        success: false,
+        message: error.message,
+      };
     }
   }
 
   @Post('login')
-  async login(@Body() credentials: { email: string; password: string }): Promise<any> {
+  async login(
+    @Body() credentials: { email: string; password: string },
+  ): Promise<any> {
     const user = await this.userService.findByEmail(credentials.email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const passwordMatch = await bcrypt.compare(credentials.password, user.password);
+    const passwordMatch = await bcrypt.compare(
+      credentials.password,
+      user.password,
+    );
     if (!passwordMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
     const token = await this.userService.generateToken(user);
-    return user ;
+    return user;
   }
 
+  @UseGuards(AdminGuard)
   @Get('profile/:userId')
-  async profile(@Param('userId') userId: number){
+  async profile(@Param('userId') userId: number) {
     try {
       const user = await this.userService.findById(userId);
       return user;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
-}
+  }
 }

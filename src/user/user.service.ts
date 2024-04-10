@@ -1,5 +1,9 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
+// import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './schema/user.entity';
 import { Repository } from 'typeorm';
@@ -9,18 +13,19 @@ import { CreateUserDto } from './dto/user.dto';
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(
-    createUserDto: CreateUserDto) : Promise<UserEntity> {
-    const existingUser = await this.userRepository.findOne({ where:{email: createUserDto.email} });
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const existingUser = await this.userRepository.findOne({
+      where: { email: createUserDto.email },
+    });
     if (existingUser) {
       throw new ConflictException('Email already exists');
     }
     const userData = await this.userRepository.save(createUserDto);
-    const savedUser = await this.userRepository.save(userData);  
-    
+    const savedUser = await this.userRepository.save(userData);
+
     if (savedUser) {
       delete savedUser.password;
     }
@@ -33,11 +38,11 @@ export class UserService {
   }
 
   async generateToken(user: UserEntity): Promise<object> {
-    const payload = { role: user.role, id: user.id }; 
+    const payload = { role: user.role, id: user.id };
     return payload;
   }
 
   async findById(id: number): Promise<UserEntity | undefined> {
-    return this.userRepository.findOne({where:{id:id}});
+    return this.userRepository.findOne({ where: { id: id } });
   }
 }
