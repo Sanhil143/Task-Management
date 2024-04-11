@@ -5,10 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TeamMemberShipEntity } from './schema/team-member.entity';
 import { UserEntity } from 'src/user/schema/user.entity';
 import { TeamEntity } from 'src/team/schema/team.entity';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TeamMemberShipEntity, UserEntity, TeamEntity]),
+    TypeOrmModule.forFeature([TeamMemberShipEntity, UserEntity, TeamEntity],),
+    JwtModule.register({ secret: 'Sanhil' })
   ],
   controllers: [TeamMemberShipController],
   providers: [TeamMemberShipService],

@@ -16,7 +16,7 @@ export class TeamService {
     return this.teamRepository.save(userData);
   }
 
-  async getAllTasks(): Promise<TeamEntity[]> {
+  async getAllTeams(): Promise<TeamEntity[]> {
     return await this.teamRepository.find();
   }
 }

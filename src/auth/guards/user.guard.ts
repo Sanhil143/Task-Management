@@ -1,18 +1,3 @@
-// import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-
-// @Injectable()
-// export class UserGuard implements CanActivate {
-//   canActivate(context: ExecutionContext): boolean {
-//     const request = context.switchToHttp().getRequest();
-//     console.log(request.headers.authorizations);
-
-//     if(request.user){
-//       return request.user.role === 'user';
-
-//     }
-//   }
-//   }
-
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -25,12 +10,12 @@ export class UserGuard implements CanActivate {
     const token = this.extractTokenFromHeaders(request.headers);
 
     if (!token) {
-      return false; // Token not provided
+      return false;
     }
 
     try {
       const decoded = this.jwtService.verify(token);
-      if (decoded && decoded.role === 'user') {
+      if ((decoded) && (decoded.role === 'user' || decoded.role === "admin")) {
         request.user = decoded;
         return true;
       }

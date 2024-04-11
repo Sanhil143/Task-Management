@@ -10,11 +10,14 @@ import {
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/task.dto';
 import { TaskEntity } from './schema/task.entity';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { UserGuard } from 'src/auth/guards/user.guard';
 
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
+  @UseGuards(AdminGuard)
   @Post('create')
   async create(@Body() createTaskDto: CreateTaskDto) {
     try {
@@ -31,11 +34,13 @@ export class TaskController {
     }
   }
 
+  @UseGuards(AdminGuard)
   @Get()
   async getAllTasks(): Promise<TaskEntity[]> {
     return this.taskService.getAllTasks();
   }
 
+  @UseGuards(UserGuard)
   @Get('/assignee/:assigneeId')
   async getTasksByAssignee(
     @Param('assigneeId') assigneeId: number,
@@ -43,11 +48,13 @@ export class TaskController {
     return this.taskService.getTasksByAssignee(assigneeId);
   }
 
+  @UseGuards(AdminGuard)
   @Patch(':id/updateStatus')
   async updateTaskStatus(@Param('id') taskId: number): Promise<TaskEntity> {
     return this.taskService.updateTaskStatus(taskId);
   }
 
+  @UseGuards(AdminGuard)
   @Patch(':id/updateDate')
   async updateTaskDate(
     @Param('id') taskId: number,

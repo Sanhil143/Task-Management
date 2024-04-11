@@ -1,17 +1,3 @@
-// import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-
-// @Injectable()
-// export class AdminGuard implements CanActivate {
-//   canActivate(context: ExecutionContext): boolean {
-//     const { user } = context.switchToHttp().getRequest();
-//     if (!user || !user.role) {
-//       return false;
-//     }
-
-//     return user.role === 'admin';
-//   }
-// }
-
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -24,7 +10,7 @@ export class AdminGuard implements CanActivate {
     const token = this.extractTokenFromHeaders(request.headers);
 
     if (!token) {
-      return false; // Token not provided
+      return false;
     }
 
     try {

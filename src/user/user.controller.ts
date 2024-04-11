@@ -13,7 +13,6 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import { UserGuard } from 'src/auth/guards/user.guard';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { JwtService } from '@nestjs/jwt';
 
 @Controller('user')
@@ -23,7 +22,7 @@ export class UserController {
     private jwtService: JwtService,
   ) {}
 
-  @Post('signin')
+  @Post('signup')
   async create(@Body() createUserDto: CreateUserDto) {
     try {
       let { role, password } = createUserDto;
@@ -47,26 +46,7 @@ export class UserController {
     }
   }
 
-  @Post('login')
-  async login(
-    @Body() credentials: { email: string; password: string },
-  ): Promise<any> {
-    const user = await this.userService.findByEmail(credentials.email);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    const passwordMatch = await bcrypt.compare(
-      credentials.password,
-      user.password,
-    );
-    if (!passwordMatch) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    const token = await this.userService.generateToken(user);
-    return user;
-  }
-
-  @UseGuards(AdminGuard)
+  @UseGuards(UserGuard)
   @Get('profile/:userId')
   async profile(@Param('userId') userId: number) {
     try {

@@ -7,17 +7,21 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { TeamMemberShipService } from './team-member.service';
 import {
   CreateTeamMemberShipDto,
   UpdateTeamMemberShipDto,
 } from './dto/teammembership.dto';
+import { UserGuard } from 'src/auth/guards/user.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @Controller('teammembership')
 export class TeamMemberShipController {
   constructor(private readonly teamMemberShipService: TeamMemberShipService) {}
 
+  @UseGuards(AdminGuard)
   @Post('create')
   async createTeamMembership(
     @Body() createTeamMemberShipDto: CreateTeamMemberShipDto,
@@ -36,6 +40,7 @@ export class TeamMemberShipController {
     }
   }
 
+  @UseGuards(AdminGuard)
   @Patch('update')
   async updateTeamMembership(
     @Body() updateTeamMemberShipDto: UpdateTeamMemberShipDto,
@@ -54,6 +59,7 @@ export class TeamMemberShipController {
     }
   }
 
+  @UseGuards(UserGuard)
   @Get(':teamId')
   async getTeamMembersByTeamId(@Param('teamId') teamId: number) {
     try {
