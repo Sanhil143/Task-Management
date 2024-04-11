@@ -14,7 +14,9 @@ export class AdminGuard implements CanActivate {
     }
 
     try {
-      const decoded = this.jwtService.verify(token);
+      const decoded = this.jwtService.verify(token, {
+        secret: process.env.Jwt_Secret,
+      });
       if (decoded && decoded.role === 'admin') {
         request.user = decoded;
         return true;

@@ -9,8 +9,8 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TeamMemberShipEntity, UserEntity, TeamEntity],),
-    JwtModule.register({ secret: 'Sanhil' })
+    TypeOrmModule.forFeature([TeamMemberShipEntity, UserEntity, TeamEntity]),
+    JwtModule.register({ secret: process.env.Jwt_Secret }),
   ],
   controllers: [TeamMemberShipController],
   providers: [TeamMemberShipService],

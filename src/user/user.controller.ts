@@ -6,7 +6,6 @@ import {
   HttpStatus,
   Param,
   Post,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';

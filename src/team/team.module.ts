@@ -6,8 +6,10 @@ import { TeamEntity } from './schema/team.entity';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TeamEntity]),
-  JwtModule.register({ secret: 'Sanhil' })],
+  imports: [
+    TypeOrmModule.forFeature([TeamEntity]),
+    JwtModule.register({ secret: process.env.Jwt_Secret }),
+  ],
   controllers: [TeamController],
   providers: [TeamService],
 })

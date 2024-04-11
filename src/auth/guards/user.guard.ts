@@ -14,8 +14,10 @@ export class UserGuard implements CanActivate {
     }
 
     try {
-      const decoded = this.jwtService.verify(token);
-      if ((decoded) && (decoded.role === 'user' || decoded.role === "admin")) {
+      const decoded = this.jwtService.verify(token, {
+        secret: process.env.Jwt_Secret,
+      });
+      if (decoded && (decoded.role === 'user' || decoded.role === 'admin')) {
         request.user = decoded;
         return true;
       }
