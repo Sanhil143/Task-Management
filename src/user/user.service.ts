@@ -21,9 +21,9 @@ export class UserService {
     const userData = await this.userRepository.save(createUserDto);
     const savedUser = await this.userRepository.save(userData);
 
-    if (savedUser) {
-      delete savedUser.password;
-    }
+    // if (savedUser) {
+    //   delete savedUser.password;
+    // }
 
     return savedUser;
   }
@@ -40,4 +40,5 @@ export class UserService {
   async findById(id: number): Promise<UserEntity | undefined> {
     return this.userRepository.findOne({ where: { id: id } });
   }
+
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -63,9 +64,35 @@ export class TeamMemberShipController {
   @Get(':teamId')
   async getTeamMembersByTeamId(@Param('teamId') teamId: number) {
     try {
+      if(!teamId){
+        return {status:false, error:"teamId is required"}
+      }
       const teamMembers =
         await this.teamMemberShipService.getTeamMembersByTeamId(teamId);
       return teamMembers;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
+  }
+  
+  @UseGuards(AdminGuard)
+  @Delete('removeTeamMember/:teamId/:userId')
+  async removeTeamMemberbyUserId(
+    @Param('teamId') teamId: number,
+    @Param('userId') userId: number
+  ){
+    try {
+      if(!teamId){
+        return {status:false, error:"teamId is required"}
+      }
+      if(!userId){
+        return {status:false, error:"userId is required"}
+      }
+      const removeTeamMember = await this.teamMemberShipService.removeTeamMemberbyUserId(userId,teamId);
+      if(!removeTeamMember){
+        return {status:false, message:'error during deletion'}
+      }
+      return {status:true, message:'teammember remove successfully'}
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
