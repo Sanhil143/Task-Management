@@ -40,6 +40,18 @@ export class TaskService {
     });
   }
 
+  async getCompletedTask(asigneeId: number): Promise<TaskEntity[]> {
+    return await this.taskRepository.find({
+      where: { asignee: { id: asigneeId},status:'completed' },
+    });
+  }
+
+  async getPendingTask(asigneeId: number): Promise<TaskEntity[]> {
+    return await this.taskRepository.find({
+      where: { asignee: { id: asigneeId },status:"pending" },
+    });
+  }
+
   async updateTaskStatus(taskId: number): Promise<TaskEntity> {
     const task = await this.taskRepository.findOne({
       where: { taskId: taskId },

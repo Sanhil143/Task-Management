@@ -44,8 +44,33 @@ export class TaskController {
   @Get('/assignee/:assigneeId')
   async getTasksByAssignee(
     @Param('assigneeId') assigneeId: number,
-  ): Promise<TaskEntity[]> {
+  ): Promise<TaskEntity[] | { status: boolean; error: string }>{
+    if(!assigneeId){
+      return ({status:false, error:"userId is required"})
+    }
     return this.taskService.getTasksByAssignee(assigneeId);
+  }
+
+  @UseGuards(UserGuard)
+  @Get('/completed/:assigneeId')
+  async getCompletedTask(
+    @Param('assigneeId') assigneeId: number,
+  ): Promise<TaskEntity[] | { status: boolean; error: string }> {
+    if(!assigneeId){
+      return ({status:false, error:"userId is required"})
+    }
+    return this.taskService.getCompletedTask(assigneeId);
+  }
+
+  @UseGuards(UserGuard)
+  @Get('/pending/:assigneeId')
+  async getPendingTask(
+    @Param('assigneeId') assigneeId: number,
+  ): Promise<TaskEntity[] | { status: boolean; error: string }> {
+    if(!assigneeId){
+      return ({status:false, error:"userId is required"})
+    }
+    return this.taskService.getPendingTask(assigneeId);
   }
 
   @UseGuards(AdminGuard)

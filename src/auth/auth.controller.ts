@@ -39,7 +39,8 @@ export class AuthController {
       message: 'login successfully',
       token: token.accessToken,
       userId: user.id,
-      userType:user.role
+      userType:user.role,
+      firstName:user.firstName
     };
   }
 
