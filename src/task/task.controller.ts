@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { CreateTaskDto } from './dto/task.dto';
+import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto';
 import { TaskEntity } from './schema/task.entity';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { UserGuard } from 'src/auth/guards/user.guard';
@@ -35,9 +35,9 @@ export class TaskController {
   }
 
   @UseGuards(AdminGuard)
-  @Get()
-  async getAllTasks(): Promise<TaskEntity[]> {
-    return this.taskService.getAllTasks();
+  @Get(':userId')
+  async getAllTasks(@Param('userId') userId: number): Promise<TaskEntity[]> {
+    return this.taskService.getAllTasks(userId);
   }
 
   @UseGuards(UserGuard)
@@ -74,17 +74,21 @@ export class TaskController {
   }
 
   @UseGuards(AdminGuard)
-  @Patch(':id/updateStatus')
-  async updateTaskStatus(@Param('id') taskId: number): Promise<TaskEntity> {
-    return this.taskService.updateTaskStatus(taskId);
+  @Patch(':taskId/:userId/updateStatus')
+  async updateTaskStatus(
+    @Param('taskId') taskId: number,
+    @Param('userId') userId: number,
+  ): Promise<TaskEntity> {
+    return this.taskService.updateTaskStatus(taskId,userId);
   }
 
   @UseGuards(AdminGuard)
-  @Patch(':id/updateDate')
+  @Patch(':taskId/:userId/updateDate')
   async updateTaskDate(
-    @Param('id') taskId: number,
-    @Body() createTaskDto: CreateTaskDto,
+    @Param('taskId') taskId: number,
+    @Param('userId') userId: number,
+    @Body() updateTaskDto: UpdateTaskDto,
   ): Promise<TaskEntity> {
-    return this.taskService.updateTaskDate(taskId, createTaskDto);
+    return this.taskService.updateTaskDate(taskId, userId,updateTaskDto);
   }
 }

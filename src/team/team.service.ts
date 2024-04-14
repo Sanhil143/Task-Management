@@ -19,22 +19,24 @@ export class TeamService {
     return this.teamRepository.save(userData);
   }
 
-  async getAllTeams(): Promise<TeamEntity[]> {
-    return await this.teamRepository.find();
+  async getAllTeams(userId:number): Promise<TeamEntity[]> {
+    return await this.teamRepository.find({
+      where:{userId:userId,isDeleted:false}
+    });
   }
 
-  async removeTeam(teamId: number): Promise<TeamEntity | undefined> {
+  async removeTeam(teamId: number,userId:number): Promise<TeamEntity | undefined> {
     const teamMemberships = await this.teamMemberShipRepository.find({
-      where: { teamId },
+      where: { teamId :teamId,userId:userId},
     });
 
     await Promise.all(teamMemberships.map(async (membership) => {
-      await this.teamMemberShipRepository.remove(membership);
+      await this.teamMemberShipRepository.update(membership.teamMemberShipId, { isDeleted: true, updatedAt: new Date() });
     }));
   
     const teamToRemove = await this.teamRepository.findOne({where:{teamId}});
     if (teamToRemove) {
-      await this.teamRepository.remove(teamToRemove);
+      await this.teamRepository.update(teamToRemove.teamId,{isDeleted:true, updatedAt:new Date()});
     }
     return teamToRemove;
   }

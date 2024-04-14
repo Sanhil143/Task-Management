@@ -19,4 +19,13 @@ export class UserEntity {
 
   @Column({ nullable: false })
   password: string;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ default: null, nullable: true })
+  updatedAt: Date | null;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 }

@@ -1,4 +1,5 @@
 export class CreateTaskDto {
+  userId:number;
   description: string;
   due_date: Date;
   asignee: number;
@@ -7,4 +8,5 @@ export class CreateTaskDto {
 export class UpdateTaskDto {
   description: string;
   status: string;
+  due_date: Date;
 }

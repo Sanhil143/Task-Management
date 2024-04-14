@@ -10,6 +10,9 @@ export class TaskEntity {
   description: string;
 
   @Column()
+  userId:number
+
+  @Column()
   due_date: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
@@ -17,4 +20,13 @@ export class TaskEntity {
 
   @Column()
   status: string;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ default: null, nullable: true })
+  updatedAt: Date | null;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 }

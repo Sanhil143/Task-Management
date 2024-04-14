@@ -18,4 +18,13 @@ export class TeamMemberShipEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   user: UserEntity;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ default: null, nullable: true })
+  updatedAt: Date | null;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 }
