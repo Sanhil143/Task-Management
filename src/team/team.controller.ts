@@ -3,6 +3,7 @@ import { TeamService } from './team.service';
 import { CreateTeamDto } from './dto/team.dto';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { TeamEntity } from './schema/team.entity';
+import { UserGuard } from 'src/auth/guards/user.guard';
 
 @Controller('team')
 export class TeamController {
@@ -47,5 +48,11 @@ export class TeamController {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @UseGuards(UserGuard)
+  @Get('getAllTeamByUser/:userId')
+  async getAllTeamByUser(@Param('userId')userId:number){
+    return this.teamService.getAllTeamByUser(userId);
   }
 }

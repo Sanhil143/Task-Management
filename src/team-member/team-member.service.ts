@@ -132,7 +132,8 @@ export class TeamMemberShipService {
     return users;
   }
 
-  async removeTeamMemberbyUserId(userId: number, teamId: number): Promise<TeamMemberShipEntity | undefined> {
+  async removeTeamMemberbyUserId(
+    userId: number, teamId: number): Promise<TeamMemberShipEntity | undefined> {
     const teamMembershipToRemove = await this.teamMemberShipRepository.findOne({
       where: { userId: userId, teamId:teamId },
     });

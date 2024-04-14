@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTeamDto } from './dto/team.dto';
 import { TeamEntity } from './schema/team.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -40,4 +40,43 @@ export class TeamService {
     }
     return teamToRemove;
   }
+
+  async getAllTeamByUser(userId:number){
+    const checkUser = await this.teamMemberShipRepository.find({
+      where:{userId:userId,isDeleted:false}
+    })
+    
+    if (!checkUser || checkUser.length === 0) {
+      throw new HttpException(
+        'No team found for the given user ID',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const teams: {
+      teamId: number;
+      name: string;
+      enrolled:Date;
+      teamCreated:Date;
+      adminUserId:number;
+    }[] = [];
+
+    for (const membership of checkUser) {
+      const teamId = membership.teamId;
+      const team = await this.teamRepository.findOne({ where: { teamId: teamId } });
+      if (team) {
+        teams.push({
+          teamId: team.teamId,
+          name: team.name,
+          enrolled: membership.createdAt, 
+          teamCreated:team.createdAt,
+          adminUserId:team.userId
+        });
+      }
+  }
+  return teams;
+
+  
+  }
 }
+
+  
