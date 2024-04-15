@@ -133,22 +133,24 @@ export class TeamMemberShipService {
   }
 
   async removeTeamMemberbyUserId(
-    userId: number, teamId: number): Promise<TeamMemberShipEntity | undefined> {
+    userId: number,
+    teamId: number,
+  ): Promise<TeamMemberShipEntity | undefined> {
     const teamMembershipToRemove = await this.teamMemberShipRepository.findOne({
-      where: { userId: userId, teamId:teamId },
+      where: { userId: userId, teamId: teamId },
     });
-  
+
     if (!teamMembershipToRemove) {
       throw new HttpException(
         'Team membership not found',
         HttpStatus.NOT_FOUND,
       );
     }
-  
+
     const removedTeamMembership = await this.teamMemberShipRepository.remove(
       teamMembershipToRemove,
     );
-  
+
     return removedTeamMembership;
   }
 }

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, UseGuards, Delete, Param, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Delete,
+  Param,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { TeamService } from './team.service';
 import { CreateTeamDto } from './dto/team.dto';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
@@ -12,12 +22,12 @@ export class TeamController {
   @UseGuards(AdminGuard)
   @Post('create')
   create(@Body() createTeamDto: CreateTeamDto) {
-    const {name,userId} = createTeamDto
-    if(!name){
-      return {status:false, error:"team name is required"}
+    const { name, userId } = createTeamDto;
+    if (!name) {
+      return { status: false, error: 'team name is required' };
     }
-    if(!userId){
-      return {status:false, error:"admin id is required"}
+    if (!userId) {
+      return { status: false, error: 'admin id is required' };
     }
     return this.teamService.create(createTeamDto);
   }
@@ -31,20 +41,21 @@ export class TeamController {
   @UseGuards(AdminGuard)
   @Delete('removeTeam/:teamId/:userId')
   async removeTeam(
-    @Param('teamId') teamId:number,
-    @Param('userId') userId: number){
+    @Param('teamId') teamId: number,
+    @Param('userId') userId: number,
+  ) {
     try {
-      if(!teamId){
-        return {status:false, error:"teamId is required"}
+      if (!teamId) {
+        return { status: false, error: 'teamId is required' };
       }
-      if(!userId){
-        return {status:false, error:"userId is required"}
+      if (!userId) {
+        return { status: false, error: 'userId is required' };
       }
-      const removeTeam = await this.teamService.removeTeam(teamId,userId);
-      if(!removeTeam){
-        return {status:false, error:"error during team deletion"}
+      const removeTeam = await this.teamService.removeTeam(teamId, userId);
+      if (!removeTeam) {
+        return { status: false, error: 'error during team deletion' };
       }
-      return {status:true, error:"team remove successfully"}
+      return { status: true, error: 'team remove successfully' };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -52,7 +63,7 @@ export class TeamController {
 
   @UseGuards(UserGuard)
   @Get('getAllTeamByUser/:userId')
-  async getAllTeamByUser(@Param('userId')userId:number){
+  async getAllTeamByUser(@Param('userId') userId: number) {
     return this.teamService.getAllTeamByUser(userId);
   }
 }

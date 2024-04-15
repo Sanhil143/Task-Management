@@ -5,9 +5,8 @@ export class CreateUserDto {
   email: string;
   password: string;
 }
-export class updateUserDto {
+export class UpdateUserDto {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
 }

@@ -10,7 +10,7 @@ export class TaskEntity {
   description: string;
 
   @Column()
-  userId:number
+  userId: number;
 
   @Column()
   due_date: Date;

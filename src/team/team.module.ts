@@ -8,7 +8,7 @@ import { TeamMemberShipEntity } from 'src/team-member/schema/team-member.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TeamEntity,TeamMemberShipEntity]),
+    TypeOrmModule.forFeature([TeamEntity, TeamMemberShipEntity]),
     JwtModule.register({ secret: process.env.Jwt_Secret }),
   ],
   controllers: [TeamController],

@@ -15,7 +15,7 @@ export class TaskService {
   ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<TaskEntity> {
-    const { description, due_date, asignee,userId } = createTaskDto;
+    const { description, due_date, asignee, userId } = createTaskDto;
 
     const user = await this.userRepository.findOne({ where: { id: asignee } });
     if (!user) {
@@ -27,64 +27,64 @@ export class TaskService {
     newTask.asignee = user;
     newTask.status = 'pending';
     newTask.userId = userId;
-    
+
     return this.taskRepository.save(newTask);
   }
 
-  async getAllTasks(userId:number): Promise<TaskEntity[]> {
+  async getAllTasks(userId: number): Promise<TaskEntity[]> {
     return await this.taskRepository.find({
-      where:{userId:userId, isDeleted:false},
-      order:{createdAt:'DESC'}
+      where: { userId: userId, isDeleted: false },
+      order: { createdAt: 'DESC' },
     });
   }
 
   async getTasksByAssignee(asigneeId: number): Promise<TaskEntity[]> {
     return await this.taskRepository.find({
       where: { asignee: { id: asigneeId } },
-      order:{createdAt:'DESC'}
+      order: { createdAt: 'DESC' },
     });
   }
 
   async getCompletedTask(asigneeId: number): Promise<TaskEntity[]> {
     return await this.taskRepository.find({
-      where: { asignee: { id: asigneeId},status:'completed' },
-      order:{createdAt:'DESC'}
+      where: { asignee: { id: asigneeId }, status: 'completed' },
+      order: { createdAt: 'DESC' },
     });
   }
 
   async getPendingTask(asigneeId: number): Promise<TaskEntity[]> {
     return await this.taskRepository.find({
-      where: { asignee: { id: asigneeId },status:"pending" },
-      order:{createdAt:'DESC'}
+      where: { asignee: { id: asigneeId }, status: 'pending' },
+      order: { createdAt: 'DESC' },
     });
   }
 
-  async updateTaskStatus(taskId: number,userId:number): Promise<TaskEntity> {
+  async updateTaskStatus(taskId: number, userId: number): Promise<TaskEntity> {
     const task = await this.taskRepository.findOne({
-      where: { taskId: taskId,userId:userId },
+      where: { taskId: taskId, userId: userId },
     });
     if (!task) {
       throw new Error('Task not found');
     }
     task.status = 'completed';
-    task.updatedAt = new Date()
+    task.updatedAt = new Date();
     return await this.taskRepository.save(task);
   }
 
   async updateTaskDate(
     taskId: number,
-    userId:number,
+    userId: number,
     updateTaskDto: UpdateTaskDto,
   ): Promise<TaskEntity> {
     const { due_date } = updateTaskDto;
     const task = await this.taskRepository.findOne({
-      where: { taskId: taskId , userId:userId},
+      where: { taskId: taskId, userId: userId },
     });
     if (!task) {
       throw new Error('Task not found');
     }
     task.due_date = due_date;
-    task.updatedAt = new Date()
+    task.updatedAt = new Date();
     return await this.taskRepository.save(task);
   }
 }

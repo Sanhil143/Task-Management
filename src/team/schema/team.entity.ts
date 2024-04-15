@@ -6,7 +6,7 @@ export class TeamEntity {
   teamId: number;
 
   @Column()
-  userId:number
+  userId: number;
 
   @Column()
   name: string;
