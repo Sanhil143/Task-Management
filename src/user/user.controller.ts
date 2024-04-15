@@ -47,6 +47,7 @@ export class UserController {
       if (!userId) {
         return { status: false, statusCode: 400, error: 'userId is required' };
       }
+
       if (Object.keys(updateUserDto).length === 0) {
         return {
           status: false,
