@@ -54,13 +54,13 @@ export class UserService {
     }
 
     if (updateUserDto.firstName !== undefined) {
-      existingUser.firstName = updateUserDto.firstName;
+      existingUser.firstName = updateUserDto.firstName.toLowerCase();
     }
     if (updateUserDto.email !== undefined) {
       existingUser.email = updateUserDto.email;
     }
     if (updateUserDto.lastName !== undefined) {
-      existingUser.lastName = updateUserDto.lastName;
+      existingUser.lastName = updateUserDto.lastName.toLowerCase();
     }
 
     existingUser.updatedAt = new Date();

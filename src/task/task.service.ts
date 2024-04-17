@@ -61,7 +61,7 @@ export class TaskService {
 
   async updateTaskStatus(taskId: number, userId: number): Promise<TaskEntity> {
     const task = await this.taskRepository.findOne({
-      where: { taskId: taskId, userId: userId },
+      where: { taskId:taskId,userId:userId },
     });
     if (!task) {
       throw new Error('Task not found');
