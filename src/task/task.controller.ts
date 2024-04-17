@@ -35,9 +35,31 @@ export class TaskController {
   }
 
   @UseGuards(AdminGuard)
-  @Get(':userId')
-  async getAllTasks(@Param('userId') userId: number): Promise<TaskEntity[]> {
+  @Get('/getAllTasksByAdmin/:userId')
+  async getAllTasks(@Param('userId') userId: number){
     return this.taskService.getAllTasks(userId);
+  }
+
+  @UseGuards(AdminGuard)
+  @Get('/getCompletedTaskByAdmin/completed/:userId')
+  async getCompletedTaskByAdmin(
+    @Param('userId') userId: number,
+  ){
+    if (!userId) {
+      return { status: false, error: 'userId is required' };
+    }
+    return this.taskService.getCompletedTaskByAdmin(userId);
+  }
+
+  @UseGuards(UserGuard)
+  @Get('/getPendingTaskByAdmin/pending/:userId')
+  async getPendingTaskByAdmin(
+    @Param('userId') userId: number,
+  ){
+    if (!userId) {
+      return { status: false, error: 'userId is required' };
+    }
+    return this.taskService.getPendingTaskByAdmin(userId);
   }
 
   @UseGuards(UserGuard)

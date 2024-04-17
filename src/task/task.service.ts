@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from './schema/task.entity';
 import { Repository } from 'typeorm';
@@ -31,12 +31,81 @@ export class TaskService {
     return this.taskRepository.save(newTask);
   }
 
-  async getAllTasks(userId: number): Promise<TaskEntity[]> {
-    return await this.taskRepository.find({
-      where: { userId: userId, isDeleted: false },
-      order: { createdAt: 'DESC' },
+  async getAllTasks(userId: number) {
+    const allTasks = await this.taskRepository.find({
+        where: { userId: userId, isDeleted: false },
+        order: { createdAt: 'DESC' },
+        relations: ['asignee'],
     });
+
+    if (allTasks.length > 0) {
+        const tasks = allTasks.map(task => ({
+            taskId: task.taskId,
+            description: task.description,
+            adminId: task.userId,
+            status:task.status,
+            dueDate: task.due_date,
+            createdAt: task.createdAt,
+            updatedAt: task.updatedAt,
+            asigneeId: task.asignee.id,
+            firstName: task.asignee.firstName,
+            lastName: task.asignee.lastName
+        }));
+        return tasks;
+    } else {
+        throw new Error('Tasks not found');
+    }
+}
+
+  async getCompletedTaskByAdmin(userId: number) {
+  const allTasks =  await this.taskRepository.find({
+    where: { userId: userId, status: 'completed' },
+    order: { createdAt: 'DESC' },
+    relations:['asignee']
+  });
+  if (allTasks.length > 0) {
+    const tasks = allTasks.map(task => ({
+        taskId: task.taskId,
+        description: task.description,
+        adminId: task.userId,
+        status:task.status,
+        dueDate: task.due_date,
+        createdAt: task.createdAt,
+        updatedAt: task.updatedAt,
+        asigneeId: task.asignee.id,
+        firstName: task.asignee.firstName,
+        lastName: task.asignee.lastName
+    }));
+    return tasks;
+  } else {
+    throw new Error('Tasks not found');
   }
+}
+
+async getPendingTaskByAdmin(userId: number){
+  const allTasks =  await this.taskRepository.find({
+    where: { userId: userId, status: 'pending' },
+    order: { createdAt: 'DESC' },
+    relations:['asignee']
+  });
+  if (allTasks.length > 0) {
+    const tasks = allTasks.map(task => ({
+        taskId: task.taskId,
+        description: task.description,
+        adminId: task.userId,
+        status:task.status,
+        dueDate: task.due_date,
+        createdAt: task.createdAt,
+        updatedAt: task.updatedAt,
+        asigneeId: task.asignee.id,
+        firstName: task.asignee.firstName,
+        lastName: task.asignee.lastName
+    }));
+    return tasks;
+  } else {
+    throw new Error('Tasks not found');
+  }
+}
 
   async getTasksByAssignee(asigneeId: number): Promise<TaskEntity[]> {
     return await this.taskRepository.find({
