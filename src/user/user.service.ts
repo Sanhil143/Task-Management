@@ -23,7 +23,7 @@ export class UserService {
     }
     const userData = await this.userRepository.save(createUserDto);
 
-    // if (savedUser) {
+    // if (savedUser) { 
     //   delete savedUser.password;
     // }
 
@@ -52,7 +52,6 @@ export class UserService {
         throw new Error('user not found');
       }
     }
-
     if (updateUserDto.firstName !== undefined) {
       existingUser.firstName = updateUserDto.firstName.toLowerCase();
     }
@@ -62,7 +61,6 @@ export class UserService {
     if (updateUserDto.lastName !== undefined) {
       existingUser.lastName = updateUserDto.lastName.toLowerCase();
     }
-
     existingUser.updatedAt = new Date();
     const updatedData = await this.userRepository.save(existingUser);
     return updatedData;
